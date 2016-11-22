@@ -100,11 +100,11 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                 _impressionistView.setBrushType(BrushType.Line);
                 return true;
             case R.id.menuCircleSplatter:
-                Toast.makeText(this, "Circle Splatter Brush", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Rectangle Velocity Brush", Toast.LENGTH_SHORT).show();
                 _impressionistView.setBrushType(BrushType.CircleSplatter);
                 return true;
             case R.id.menuLineSplatter:
-                Toast.makeText(this, "Line Splatter Brush", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Circle Velocity Brush", Toast.LENGTH_SHORT).show();
                 _impressionistView.setBrushType(BrushType.LineSplatter);
                 return true;
         }
@@ -176,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+
+    public void onButtonClickSaveImage(View v) {
+        FileUtils.verifyStoragePermissions(this);
+        MediaStore.Images.Media.insertImage(getContentResolver(), _impressionistView.get_offScreenBitmap(), "Creative Title Not Used", "Description, who needs a description??? This image is pure art, it speaks for itself!!");
     }
 
     /**

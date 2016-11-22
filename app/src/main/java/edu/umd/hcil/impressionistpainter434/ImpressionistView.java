@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -39,6 +40,8 @@ public class ImpressionistView extends View {
     private Paint _paintBorder = new Paint();
     private BrushType _brushType = BrushType.Square;
     private float _minBrushRadius = 5;
+
+    private VelocityTracker velocity = null;
 
     public ImpressionistView(Context context) {
         super(context);
@@ -82,6 +85,10 @@ public class ImpressionistView extends View {
         //_paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
     }
 
+    public Bitmap get_offScreenBitmap() {
+        return _offScreenBitmap;
+    }
+
     @Override
     protected void onSizeChanged (int w, int h, int oldw, int oldh){
 
@@ -113,7 +120,8 @@ public class ImpressionistView extends View {
      * Clears the painting
      */
     public void clearPainting(){
-        //TODO
+        _offScreenBitmap.eraseColor(Color.TRANSPARENT);
+        invalidate();
     }
 
     @Override
@@ -141,16 +149,43 @@ public class ImpressionistView extends View {
 
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (_brushType == BrushType.LineSplatter || _brushType == BrushType.CircleSplatter) {
+                    if (velocity == null) {
+                        velocity = VelocityTracker.obtain();
+                    } else {
+                        velocity.clear();
+                    }
+
+                    velocity.addMovement(motionEvent);
+                }
+
                 break;
             case MotionEvent.ACTION_MOVE:
-                Bitmap imageViewBitmap = ((BitmapDrawable)_imageView.getDrawable()).getBitmap();
+                Bitmap imageViewBitmap = _imageView.getDrawingCache();
                 Rect border = getBitmapPositionInsideImageView(_imageView);
 
                 if (border.contains((int)touchX, (int)touchY)) {
-                    int pixelColor = imageViewBitmap.getPixel((int) touchX, (int) touchY - border.top);
+                    int pixelColor = imageViewBitmap.getPixel((int) touchX, (int) touchY);
                     _paint.setColor(pixelColor);
+                    _paint.setAlpha(150);
 
-                    _offScreenCanvas.drawRect(touchX, touchY, touchX + 50, touchY + 50, _paint);
+                    if (_brushType == BrushType.Square) {
+                        _offScreenCanvas.drawRect(touchX, touchY, touchX + 75, touchY + 75, _paint);
+                    } else if (_brushType == BrushType.Circle) {
+                        _offScreenCanvas.drawCircle(touchX, touchY, 50, _paint);
+                    } else if (_brushType == BrushType.Line) {
+                        _offScreenCanvas.drawLine(touchX, touchY, touchX + 50, touchY + 50, _paint);
+                    } else if (_brushType == BrushType.LineSplatter) {
+                        velocity.addMovement(motionEvent);
+                        velocity.computeCurrentVelocity(1000);
+
+                        _offScreenCanvas.drawCircle(touchX, touchY, 50 + (velocity.getXVelocity() + velocity.getYVelocity()) / 200, _paint);
+                    } else if (_brushType == BrushType.CircleSplatter) {
+                        velocity.addMovement(motionEvent);
+                        velocity.computeCurrentVelocity(1000);
+
+                        _offScreenCanvas.drawRect(touchX, touchY, touchX + 50 + velocity.getXVelocity() / 50, touchY + 50 + velocity.getYVelocity() / 50, _paint);
+                    }
                 }
 
                 break;
