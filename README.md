@@ -5,6 +5,7 @@ will invert colors taken from the image until it is unchecked.  The Click Draw b
 the currently selected brush for each tap of the drawing area on the screen.  The amount of locations being drawn is dependent on
 the brush (dots draws 3000 pixels per tap, line draws 400 lines per tap).
 Saving an image stores it at the end of the gallery.  Clear will clear the drawing on the right and leave the image untouched.
+The dots brush does not support non-click draw and the velocity brushes do not support click draw.
 
 The app was tested using a Nexus 10 API 24.
 
