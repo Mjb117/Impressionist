@@ -42,6 +42,8 @@ public class ImpressionistView extends View {
     private float _minBrushRadius = 5;
 
     private VelocityTracker velocity = null;
+    private boolean _invertColor = false;
+    private boolean _clickDraw = false;
 
     public ImpressionistView(Context context) {
         super(context);
@@ -116,6 +118,10 @@ public class ImpressionistView extends View {
         _brushType = brushType;
     }
 
+    public void set_invertColor(boolean invertColor) { _invertColor = invertColor; }
+
+    public void set_clickDraw(boolean clickDraw) { _clickDraw = clickDraw;}
+
     /**
      * Clears the painting
      */
@@ -147,47 +153,180 @@ public class ImpressionistView extends View {
         float touchX = motionEvent.getX();
         float touchY = motionEvent.getY();
 
+        Random rand = new Random();
+
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (_brushType == BrushType.LineSplatter || _brushType == BrushType.CircleSplatter) {
-                    if (velocity == null) {
-                        velocity = VelocityTracker.obtain();
-                    } else {
-                        velocity.clear();
-                    }
+                if (_brushType == BrushType.VelocityCircle || _brushType == BrushType.VelocityRectangle) {
+                    if (!_clickDraw) {
+                        if (velocity == null) {
+                            velocity = VelocityTracker.obtain();
+                        } else {
+                            velocity.clear();
+                        }
 
-                    velocity.addMovement(motionEvent);
+                        velocity.addMovement(motionEvent);
+                    }
+                } else if (_brushType == BrushType.Line) {
+                    if (_clickDraw) {
+                        Bitmap imageViewBitmap = _imageView.getDrawingCache();
+                        Rect border = getBitmapPositionInsideImageView(_imageView);
+
+                        for (int i = 0; i <= 400; i++) {
+                            int randX = rand.nextInt(border.right);
+                            int randY = rand.nextInt(border.bottom);
+
+                            if (border.contains(randX, randY)) {
+                                int pixelColor = imageViewBitmap.getPixel(randX, randY);
+                                if (!_invertColor) {
+                                    _paint.setColor(pixelColor);
+                                } else {
+                                    _paint.setColor(0xFFFFFFFF - pixelColor);
+                                }
+                                _paint.setAlpha(200);
+
+                                _offScreenCanvas.drawLine(randX, randY, randX + 50, randY + 50, _paint);
+                            }
+                        }
+
+                        invalidate();
+                    }
+                } else if (_brushType == BrushType.Dots) {
+                    if (_clickDraw) {
+                        Bitmap imageViewBitmap = _imageView.getDrawingCache();
+                        Rect border = getBitmapPositionInsideImageView(_imageView);
+
+                        for (int i = 0; i <= 3000; i++) {
+                            int randX = rand.nextInt(border.right);
+                            int randY = rand.nextInt(border.bottom);
+
+                            if (border.contains(randX, randY)) {
+                                int pixelColor = imageViewBitmap.getPixel(randX, randY);
+                                if (!_invertColor) {
+                                    _paint.setColor(pixelColor);
+                                } else {
+                                    _paint.setColor(0xFFFFFFFF - pixelColor);
+                                }
+                                _paint.setAlpha(200);
+
+                                _offScreenCanvas.drawPoint((float) randX, (float) randY, _paint);
+                            }
+                        }
+
+                        invalidate();
+                    }
+                } else if (_brushType == BrushType.Square) {
+                    if (_clickDraw) {
+                        Bitmap imageViewBitmap = _imageView.getDrawingCache();
+                        Rect border = getBitmapPositionInsideImageView(_imageView);
+
+                        for (int i = 0; i <= 100; i++) {
+                            int randX = rand.nextInt(border.right);
+                            int randY = rand.nextInt(border.bottom);
+
+                            if (border.contains(randX, randY)) {
+                                int pixelColor = imageViewBitmap.getPixel(randX, randY);
+                                if (!_invertColor) {
+                                    _paint.setColor(pixelColor);
+                                } else {
+                                    _paint.setColor(0xFFFFFFFF - pixelColor);
+                                }
+                                _paint.setAlpha(200);
+
+                                _offScreenCanvas.drawRect((float) randX, (float) randY, (float) randX + 75, (float) randY + 75, _paint);
+                            }
+                        }
+
+                        invalidate();
+                    }
+                } else if (_brushType == BrushType.Circle) {
+                    if (_clickDraw) {
+                        Bitmap imageViewBitmap = _imageView.getDrawingCache();
+                        Rect border = getBitmapPositionInsideImageView(_imageView);
+
+                        for (int i = 0; i <= 100; i++) {
+                            int randX = rand.nextInt(border.right);
+                            int randY = rand.nextInt(border.bottom);
+
+                            if (border.contains(randX, randY)) {
+                                int pixelColor = imageViewBitmap.getPixel(randX, randY);
+                                if (!_invertColor) {
+                                    _paint.setColor(pixelColor);
+                                } else {
+                                    _paint.setColor(0xFFFFFFFF - pixelColor);
+                                }
+                                _paint.setAlpha(200);
+
+                                _offScreenCanvas.drawCircle((float) randX, (float) randY, 50, _paint);
+                            }
+                        }
+
+                        invalidate();
+                    }
+                } else if (_brushType == BrushType.Caret) {
+                    if (_clickDraw) {
+                        Bitmap imageViewBitmap = _imageView.getDrawingCache();
+                        Rect border = getBitmapPositionInsideImageView(_imageView);
+
+                        for (int i = 0; i <= 200; i++) {
+                            int randX = rand.nextInt(border.right);
+                            int randY = rand.nextInt(border.bottom);
+
+                            if (border.contains(randX, randY)) {
+                                int pixelColor = imageViewBitmap.getPixel(randX, randY);
+                                if (!_invertColor) {
+                                    _paint.setColor(pixelColor);
+                                } else {
+                                    _paint.setColor(0xFFFFFFFF - pixelColor);
+                                }
+                                _paint.setAlpha(200);
+
+                                _offScreenCanvas.drawLine((float) randX, (float) randY, (float) randX + 50, (float) randY + 50, _paint);
+                                _offScreenCanvas.drawLine((float) randX, (float) randY, (float) randX - 50, (float) randY + 50, _paint);
+                            }
+                        }
+
+                        invalidate();
+                    }
                 }
 
                 break;
             case MotionEvent.ACTION_MOVE:
-                Bitmap imageViewBitmap = _imageView.getDrawingCache();
-                Rect border = getBitmapPositionInsideImageView(_imageView);
+                if (!_clickDraw) {
+                    Bitmap imageViewBitmap = _imageView.getDrawingCache();
+                    Rect border = getBitmapPositionInsideImageView(_imageView);
 
-                if (border.contains((int)touchX, (int)touchY)) {
-                    int pixelColor = imageViewBitmap.getPixel((int) touchX, (int) touchY);
-                    _paint.setColor(pixelColor);
-                    _paint.setAlpha(150);
+                    if (border.contains((int) touchX, (int) touchY)) {
+                        int pixelColor = imageViewBitmap.getPixel((int) touchX, (int) touchY);
+                        if (!_invertColor) {
+                            _paint.setColor(pixelColor);
+                        } else {
+                            _paint.setColor(0xFFFFFFFF - pixelColor);
+                        }
+                        _paint.setAlpha(200);
 
-                    if (_brushType == BrushType.Square) {
-                        _offScreenCanvas.drawRect(touchX, touchY, touchX + 75, touchY + 75, _paint);
-                    } else if (_brushType == BrushType.Circle) {
-                        _offScreenCanvas.drawCircle(touchX, touchY, 50, _paint);
-                    } else if (_brushType == BrushType.Line) {
-                        _offScreenCanvas.drawLine(touchX, touchY, touchX + 50, touchY + 50, _paint);
-                    } else if (_brushType == BrushType.LineSplatter) {
-                        velocity.addMovement(motionEvent);
-                        velocity.computeCurrentVelocity(1000);
+                        if (_brushType == BrushType.Square) {
+                            _offScreenCanvas.drawRect(touchX, touchY, touchX + 75, touchY + 75, _paint);
+                        } else if (_brushType == BrushType.Circle) {
+                            _offScreenCanvas.drawCircle(touchX, touchY, 50, _paint);
+                        } else if (_brushType == BrushType.Line) {
+                            _offScreenCanvas.drawLine(touchX, touchY, touchX + 50, touchY + 50, _paint);
+                        } else if (_brushType == BrushType.VelocityCircle) {
+                            velocity.addMovement(motionEvent);
+                            velocity.computeCurrentVelocity(1000);
 
-                        _offScreenCanvas.drawCircle(touchX, touchY, 50 + (velocity.getXVelocity() + velocity.getYVelocity()) / 200, _paint);
-                    } else if (_brushType == BrushType.CircleSplatter) {
-                        velocity.addMovement(motionEvent);
-                        velocity.computeCurrentVelocity(1000);
+                            _offScreenCanvas.drawCircle(touchX, touchY, 25 + (velocity.getXVelocity() + velocity.getYVelocity()) / 200, _paint);
+                        } else if (_brushType == BrushType.VelocityRectangle) {
+                            velocity.addMovement(motionEvent);
+                            velocity.computeCurrentVelocity(1000);
 
-                        _offScreenCanvas.drawRect(touchX, touchY, touchX + 50 + velocity.getXVelocity() / 50, touchY + 50 + velocity.getYVelocity() / 50, _paint);
+                            _offScreenCanvas.drawRect(touchX, touchY, touchX + 50 + velocity.getXVelocity() / 50, touchY + 50 + velocity.getYVelocity() / 50, _paint);
+                        } else if (_brushType == BrushType.Caret) {
+                            _offScreenCanvas.drawLine(touchX, touchY, touchX + 50, touchY + 50, _paint);
+                            _offScreenCanvas.drawLine(touchX, touchY, touchX - 50, touchY + 50, _paint);
+                        }
                     }
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
                 break;

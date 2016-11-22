@@ -7,6 +7,8 @@ public enum BrushType {
     Circle,
     Square,
     Line,
-    CircleSplatter,
-    LineSplatter
+    Caret,
+    Dots,
+    VelocityRectangle,
+    VelocityCircle
 }

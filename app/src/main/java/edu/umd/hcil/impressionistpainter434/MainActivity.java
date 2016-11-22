@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.ActionMenuView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
             "http://www.cs.umd.edu/class/spring2016/cmsc434/assignments/IA08-AndroidII/Images/PurpleFlowerPlusButterfly_PhotoByJonFroehlich(Medium).JPG",
             "http://www.cs.umd.edu/class/spring2016/cmsc434/assignments/IA08-AndroidII/Images/WhiteFlower_PhotoByJonFroehlich(Medium).JPG",
             "http://www.cs.umd.edu/class/spring2016/cmsc434/assignments/IA08-AndroidII/Images/YellowFlower_PhotoByJonFroehlich(Medium).JPG",
+            "http://livehdwallpaper.com/wp-content/uploads/2014/12/Beautiful-Nature-Wallpapers.jpg",
+            "http://www.howtogeek.com/wp-content/uploads/2015/09/xtv4vf9-650x299.jpg",
+            "https://s-media-cache-ak0.pinimg.com/736x/f4/63/f1/f463f1b65f0c9814b501d71ace635f3d.jpg",
     };
 
     @Override
@@ -99,16 +103,42 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                 Toast.makeText(this, "Line Brush", Toast.LENGTH_SHORT).show();
                 _impressionistView.setBrushType(BrushType.Line);
                 return true;
-            case R.id.menuCircleSplatter:
-                Toast.makeText(this, "Rectangle Velocity Brush", Toast.LENGTH_SHORT).show();
-                _impressionistView.setBrushType(BrushType.CircleSplatter);
+            case R.id.menuCaret:
+                Toast.makeText(this, "Caret Brush", Toast.LENGTH_SHORT).show();
+                _impressionistView.setBrushType(BrushType.Caret);
                 return true;
-            case R.id.menuLineSplatter:
+            case R.id.menuDots:
+                Toast.makeText(this, "Dot Brush", Toast.LENGTH_SHORT).show();
+                _impressionistView.setBrushType(BrushType.Dots);
+                return true;
+            case R.id.menuVelocityRectangle:
+                Toast.makeText(this, "Rectangle Velocity Brush", Toast.LENGTH_SHORT).show();
+                _impressionistView.setBrushType(BrushType.VelocityRectangle);
+                return true;
+            case R.id.menuVelocityCircle:
                 Toast.makeText(this, "Circle Velocity Brush", Toast.LENGTH_SHORT).show();
-                _impressionistView.setBrushType(BrushType.LineSplatter);
+                _impressionistView.setBrushType(BrushType.VelocityCircle);
                 return true;
         }
         return false;
+    }
+
+    public void onCheckboxClicked(View v) {
+        boolean checked = ((CheckBox) v).isChecked();
+
+        switch (v.getId()) {
+            case R.id.invertCheckBox:
+                if (checked)
+                    _impressionistView.set_invertColor(true);
+                else
+                    _impressionistView.set_invertColor(false);
+                break;
+            case R.id.clickDrawCheckBox:
+                if (checked)
+                    _impressionistView.set_clickDraw(true);
+                else
+                    _impressionistView.set_clickDraw(false);
+        }
     }
 
 
@@ -181,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
     public void onButtonClickSaveImage(View v) {
         FileUtils.verifyStoragePermissions(this);
         MediaStore.Images.Media.insertImage(getContentResolver(), _impressionistView.get_offScreenBitmap(), "Creative Title Not Used", "Description, who needs a description??? This image is pure art, it speaks for itself!!");
+        Toast.makeText(this, "Image Saved", Toast.LENGTH_SHORT).show();
     }
 
     /**

@@ -11,11 +11,17 @@
     <item android:id="@+id/menuLine"
         android:title="Line" />
 
-    <item android:id="@+id/menuCircleSplatter"
-        android:title="Circle Splatter" />
+    <item android:id="@+id/menuCaret"
+        android:title="Caret" />
 
-    <item android:id="@+id/menuLineSplatter"
-        android:title="Line Splatter" />
+    <item android:id="@+id/menuDots"
+        android:title="Dots" />
+
+    <item android:id="@+id/menuVelocityRectangle"
+        android:title="Velocity Rectangle" />
+
+    <item android:id="@+id/menuVelocityCircle"
+        android:title="Velocity Circle" />
 
 
 

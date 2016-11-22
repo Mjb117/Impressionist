@@ -81,6 +81,21 @@
                 android:id="@+id/buttonClear"
                 android:onClick="onButtonClickClear"/>
 
+            <CheckBox
+                android:text="Invert Color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/invertCheckBox"
+                android:layout_weight="1"
+                android:onClick="onCheckboxClicked"/>
+            <CheckBox
+                android:text="Click Draw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/clickDrawCheckBox"
+                android:layout_weight="1"
+                android:onClick="onCheckboxClicked"/>
+
 
         </LinearLayout>
 
