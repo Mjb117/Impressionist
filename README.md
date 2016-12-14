@@ -1,4 +1,4 @@
-To run this app, download and import into Android Studioo and run.  Start using the app by downloading images using the download button.
+To run this app, download and import into Android Studio and run.  Start using the app by downloading images using the download button.
 Then, click the load image button and select an image from the gallery.
 Select a brush (square by default) and draw on the right side of the screen.  The invert colors box, when checked, 
 will invert colors taken from the image until it is unchecked.  The Click Draw box will randomly generate locations to draw using
